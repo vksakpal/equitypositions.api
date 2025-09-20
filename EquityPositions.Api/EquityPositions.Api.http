@@ -1,0 +1,6 @@
+@EquityPositions.Api_HostAddress = http://localhost:5014
+
+GET {{EquityPositions.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
