@@ -1,4 +1,6 @@
-﻿using EquityPositions.Api.Repositories;
+﻿using EquityPositions.Api.Extentions;
+using EquityPositions.Api.Models;
+using EquityPositions.Api.Repositories;
 using EquityPositions.Api.Repositories.Abstract;
 using EquityPositions.Api.Services.Abstract;
 using EquityPositions.Api.Services.Concrete;
@@ -10,7 +12,7 @@ namespace EquityPositions.Api.Bootstrapper
         public static IServiceCollection RegisterServices(this IServiceCollection services)
         {
             services.AddControllers();
-            
+
             // Add Swagger services
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
@@ -23,10 +25,18 @@ namespace EquityPositions.Api.Bootstrapper
                 });
             });
 
+           
+
             //App Specific Services
             services.AddScoped<IPositionCalculator, PositionCalculator>();
             services.AddScoped<IRepository, TransactionRepository>();
             services.AddScoped<IEquityPositionService, EquityPositionService>();
+
+            services.AddDatabaseOptionsMonitor<DatabaseConfiguration>(
+               connectionString: "Server=VIPER\\VINAY;Database=Equity;Integrated Security=True;Trusted_Connection=true;Encrypt=false;MultipleActiveResultSets=true",
+               sectionName: "DatabaseConfiguration"
+               );
+
             return services;
 
         }

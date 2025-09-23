@@ -1,6 +1,8 @@
 using EquityPositions.Api.Dtos;
+using EquityPositions.Api.Models;
 using EquityPositions.Api.Services.Abstract;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 
 namespace EquityPositions.Api.Controllers
@@ -11,16 +13,19 @@ namespace EquityPositions.Api.Controllers
     {
         private readonly ILogger<EquityPositionsController> _logger;
         private readonly IEquityPositionService _equityPositionService;
+        IOptionsMonitor<DatabaseConfiguration> _databaseOptionsMonitor;
 
-        public EquityPositionsController(ILogger<EquityPositionsController> logger, IEquityPositionService equityPositionService)
+        public EquityPositionsController(ILogger<EquityPositionsController> logger, IEquityPositionService equityPositionService, IOptionsMonitor<DatabaseConfiguration> optionsMonitor)
         {
             _logger = logger;
             _equityPositionService = equityPositionService;
+            _databaseOptionsMonitor = optionsMonitor;
         }
 
         [HttpGet("details", Name = "GetDetails")]
         public async Task<IActionResult> Get()
         {
+            _logger.LogInformation("Fetching equity positions from database: {Database}", _databaseOptionsMonitor.CurrentValue.Environment);
             Dtos.EquityPositions equityPositions = await _equityPositionService.GetEquityPositions();
             return Ok(equityPositions);
         }
